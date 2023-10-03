@@ -54,6 +54,15 @@ app.post('/patients', async (req, res) => {
   }
 });
 
+
+// Rota para criar um novo paciente
+app.post('/patients', async (req, res) => {
+  const accessToken = await getAuthToken();
+  const patientId = await postPatient(accessToken, req.body);
+
+  res.json({ patientId });
+});
+
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor Express rodando na porta ${port}`);

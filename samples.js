@@ -75,8 +75,8 @@ async function getAuthToken() {
 }
 
 async function postPatient(accessToken, formData) {
-    // Example of FHIR Patient: https://www.hl7.org/fhir/patient-example.json.html
-
+     // Example of FHIR Patient: https://www.hl7.org/fhir/patient-example.json.html
+     
     const patientData = {
         resourceType: 'Patient',
         active: true,
