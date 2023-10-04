@@ -9,7 +9,7 @@ const {
 } = require('./samples');
 
 const app = express();
-const port = 8080 || process.env.PORT; // Porta em que o servidor irá escutar
+const port = process.env.PORT || 8080   // Porta em que o servidor irá escutar
 
 // Habilitar o middleware CORS para permitir solicitações de qualquer origem
 const corsOptions = {
@@ -17,7 +17,7 @@ const corsOptions = {
   optionsSuccessStatus: 200, // Para compatibilidade com alguns navegadores mais antigos
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 
@@ -55,16 +55,9 @@ app.post('/patients', async (req, res) => {
 });
 
 
-// Rota para criar um novo paciente
-app.post('/patients', async (req, res) => {
-  const accessToken = await getAuthToken();
-  const patientId = await postPatient(accessToken, req.body);
-
-  res.json({ patientId });
-});
-
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor Express rodando na porta ${port}`);
 });
 
+module.exports = app;
