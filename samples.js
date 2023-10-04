@@ -75,15 +75,23 @@ async function getAuthToken() {
 }
 
 async function postPatient(accessToken, formData) {
-     // Example of FHIR Patient: https://www.hl7.org/fhir/patient-example.json.html
-     
+    // Example of FHIR Patient: https://www.hl7.org/fhir/patient-example.json.html
+
+    if (!formData || !formData.name) {
+        console.error('Erro: formData não definido ou não contém a propriedade "name"');
+        return null;
+    }
+
+    const lastName = formData.name.split(' ')[1]; // Sobrenome
+
+
     const patientData = {
         resourceType: 'Patient',
         active: true,
         name: [
             {
                 use: 'official',
-                family: formData.name.split(' ')[1], // Sobrenome
+                family: lastName, // Sobrenome
                 given: formData.name.split(' ')[0], // Nome
             },
         ],
@@ -183,51 +191,27 @@ const seed = async () => {
     }
     // Step 3 - Insert Patient
     console.log('Persist Patient data.');
-    const patientId = await postPatient(accessToken);
+    // Dentro da função seed em node/samples.js
+    console.log('Persist Patient data.');
+    const patientData = {
+        name: "Bruna Satiro" || formData.name.split(' ')[0],
+        gender: "female" || formData.gender, 
+        birthDate: "2003-01-18" || formData.birthDate,
+        address: "Endereço do paciente" || formData.address,
+        phone: "123-456-7890" || formData.phone,
+    };
+
+    const patientId = await postPatient(accessToken, patientData);
     if (!patientId) {
         process.exit(1);
     }
-    // Step 4 - Insert Practitioner (Doctor)
-    console.log('Persist Practitioner data.');
-    const practitionerId = await postPractitioner(accessToken);
-    if (!practitionerId) {
-        process.exit(1);
-    }
-    // Step 5 - Insert Appointments
-    console.log(
-        'Insert multiple appointments using Patient and Practitioner IDs.'
-    );
-    const appointmentId1 = await postAppointment(
-        patientId,
-        practitionerId,
-        accessToken
-    );
-    if (!appointmentId1) {
-        process.exit(1);
-    }
-    const appointmentId2 = await postAppointment(
-        patientId,
-        practitionerId,
-        accessToken
-    );
-    if (!appointmentId2) {
-        process.exit(1);
-    }
-    const appointmentId3 = await postAppointment(
-        patientId,
-        practitionerId,
-        accessToken
-    );
-    if (!appointmentId3) {
-        process.exit(1);
-    }
+
+   
     // Step 6 - Print Patient info
     console.log("Query Patient's data.");
     printPatientInfo(patientId, accessToken);
 
-    // Step 7 - Print all appointments assigned to a Patient
-    console.log('Query all Appointments assigned to a Patient.');
-    printAllAppointmentsAssignedToPatient(patientId, accessToken);
+    
 };
 
 // Para popular os dados, descomente abaixo e execute
@@ -237,8 +221,7 @@ seed();
 module.exports = {
     printPatientInfo,
     postPatient,
-    printAllAppointmentsAssignedToPatient,
     getAuthToken,
     getPatients,
-    searchPatientsByPhone,
 }
+
