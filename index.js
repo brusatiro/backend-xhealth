@@ -13,11 +13,11 @@ const port = process.env.PORT || 8080   // Porta em que o servidor irá escutar
 
 // Habilitar o middleware CORS para permitir solicitações de qualquer origem
 const corsOptions = {
-  origin: 'http://localhost:3000', // Permitir solicitações apenas de http://localhost:3000
+  origin: 'https://frontend-xhealth.vercel.app', // Permitir solicitações apenas de http://localhost:3000
   optionsSuccessStatus: 200, // Para compatibilidade com alguns navegadores mais antigos
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
